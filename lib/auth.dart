@@ -59,17 +59,12 @@ class AuthRepository with ChangeNotifier {
       await _saveAllItems(_savedCollectionName);
       _saved = await _getAllItems(_savedCollectionName);
       try {
-        _image_url = await firebase_storage.FirebaseStorage.instance.ref().child('test1.png').getDownloadURL();
-        print(_image_url);
+        _image_url = await firebase_storage.FirebaseStorage.instance.ref().child('${user!.email!}.png').getDownloadURL();
       }
       catch (e) {
         print('test');
-        print(e);
-        return false;
+        _image_url = '';
       }
-      // print('test');
-      // print(_image_url);
-      print(isAuthenticated);
       notifyListeners();
       return true;
     } catch (e) {
@@ -82,14 +77,26 @@ class AuthRepository with ChangeNotifier {
   Future loadSaved() async {
     if(isAuthenticated) {
       _saved = await _getAllItems(_savedCollectionName);
-      _image_url = await firebase_storage.FirebaseStorage.instance.ref().child('${user!.email!}.png').getDownloadURL();
+      try {
+        _image_url = await firebase_storage.FirebaseStorage.instance.ref().child('${user!.email!}.png').getDownloadURL();
+      }
+      catch (e) {
+        print('test');
+        _image_url = '';
+      }
       notifyListeners();
     }
   }
 
   Future loadImage() async {
     if(isAuthenticated) {
-      _image_url = await firebase_storage.FirebaseStorage.instance.ref().child('${user!.email!}.png').getDownloadURL();
+      try {
+        _image_url = await firebase_storage.FirebaseStorage.instance.ref().child('${user!.email!}.png').getDownloadURL();
+      }
+      catch (e) {
+        print('test');
+        _image_url = '';
+      }
       notifyListeners();
     }
   }

@@ -242,33 +242,37 @@ class _RandomWordsState extends State<RandomWords> {
                         child: Column(mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                          Text(authInstance.user!.email!, style: TextStyle(fontSize: 20)),
+                            Expanded(child: SizedBox(height: 5.0,),),
+                            Expanded(child: Text(authInstance.user!.email!, style: TextStyle(fontSize: 20))),
+                            Expanded(child: SizedBox(height: 5.0,),),
+                            Expanded(child:
+                            FlatButton(
+                                textColor: Colors.white,
+                                color: Colors.blue,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(2.0)),
+                                minWidth: 65,
+                                height: 25,
+                                onPressed: () async {
+                                  //FirebaseStorage storage =  await FirebaseStorage.instance;
+                                  XFile? file = await ImagePicker().pickImage(source: ImageSource.gallery);
 
-                          FlatButton(
-                              textColor: Colors.white,
-                              color: Colors.blue,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(2.0)),
-                              minWidth: 65,
-                              height: 25,
-                              onPressed: () async {
-                                //FirebaseStorage storage =  await FirebaseStorage.instance;
-                                XFile? file = await ImagePicker().pickImage(source: ImageSource.gallery);
+                                  if(file != null)
+                                  {
+                                    await firebase_storage.FirebaseStorage.instance.ref().child('${authInstance.user!.email!}.png').putFile(File(file.path));
+                                    authInstance.loadImage();
+                                  }
+                                  else
+                                  {
+                                    SnackBar snackmess = SnackBar(content: Text(
+                                        "                      “No image selected"));
+                                    ScaffoldMessenger.of(context).showSnackBar(snackmess);
+                                  }
+                                },
+                                child: const Text("Change avatar")))
+,                           Expanded(child: SizedBox(height: 5.0,),),
 
-                                if(file != null)
-                                {
-                                  await firebase_storage.FirebaseStorage.instance.ref().child('${authInstance.user!.email!}.png').putFile(File(file.path));
-                                  authInstance.loadImage();
-                                }
-                                else
-                                {
-                                  SnackBar snackmess = SnackBar(content: Text(
-                                      "                      “No image selected"));
-                                  ScaffoldMessenger.of(context).showSnackBar(snackmess);
-                                }
-                              },
-                              child: const Text("Change avatar")),
-                        ],
+                          ],
 
                       )),
                   ],),
